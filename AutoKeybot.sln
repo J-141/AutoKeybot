@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyboardModule", "src\KeyboardModule\KeyboardModule.csproj", "{C1E08BA7-221A-4EF5-812E-B0A0918ADE2D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutoKeybot", "src\AutoKeybot\AutoKeybot.csproj", "{39DAA0C4-EF8B-4411-9C2F-94E90C5AB4B6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C1E08BA7-221A-4EF5-812E-B0A0918ADE2D} = {C1E08BA7-221A-4EF5-812E-B0A0918ADE2D}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AC4CAE16-45C5-4991-B58D-579619B87DDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{9E6FC41D-5C4E-438D-966F-89AA359B7075}"
+	ProjectSection(SolutionItems) = preProject
+		examples\Hello.action = examples\Hello.action
+		examples\main.routine = examples\main.routine
+		examples\press.routine = examples\press.routine
+		examples\Print.routine = examples\Print.routine
+		examples\Space.routine = examples\Space.routine
+		examples\World.action = examples\World.action
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTest", "UnitTest\UnitTest.csproj", "{233BF865-7B78-46D3-A168-48F7570E9D95}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C1E08BA7-221A-4EF5-812E-B0A0918ADE2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1E08BA7-221A-4EF5-812E-B0A0918ADE2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1E08BA7-221A-4EF5-812E-B0A0918ADE2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1E08BA7-221A-4EF5-812E-B0A0918ADE2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39DAA0C4-EF8B-4411-9C2F-94E90C5AB4B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39DAA0C4-EF8B-4411-9C2F-94E90C5AB4B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39DAA0C4-EF8B-4411-9C2F-94E90C5AB4B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39DAA0C4-EF8B-4411-9C2F-94E90C5AB4B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{233BF865-7B78-46D3-A168-48F7570E9D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{233BF865-7B78-46D3-A168-48F7570E9D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{233BF865-7B78-46D3-A168-48F7570E9D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{233BF865-7B78-46D3-A168-48F7570E9D95}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C1E08BA7-221A-4EF5-812E-B0A0918ADE2D} = {AC4CAE16-45C5-4991-B58D-579619B87DDE}
+		{39DAA0C4-EF8B-4411-9C2F-94E90C5AB4B6} = {AC4CAE16-45C5-4991-B58D-579619B87DDE}
+		{233BF865-7B78-46D3-A168-48F7570E9D95} = {AC4CAE16-45C5-4991-B58D-579619B87DDE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F86E4E61-5BA8-4188-9542-BE9EF49F4C06}
+	EndGlobalSection
+EndGlobal
