@@ -70,14 +70,7 @@ public class Routine {
                 ParseAction(outCmdList, ref index, strArray);
             }
             else {
-                index += 1;
-                type = RoutineCommandType.ACTION_COMMAND;
-                var action = ScriptManager.GetAction(words[1]);
-                outCmdList.Add(new RoutineCommand() {
-                    RoutineAction = action,
-                    Type = type
-                });
-                return;
+                throw new InvalidDataException("ACTION should be followed by a {} block.");
             }
         }
         else if (words[0] == "REPEAT" && words[2] == "{") {

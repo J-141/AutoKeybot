@@ -5,7 +5,11 @@ public enum ControllerCommandType {
     SKIP = 2,
     START_ROUTINE = 3,
     REMOVE_ROUTINE = 4,
-    CREATE_ROUTINE = 5
+    CREATE_ROUTINE = 5,
+    PAUSE_ROUTINE = 6,
+    RESUME_ROUTINE = 7,
+    ADD_ACTION = 8,
+    CREATE_ACTION = 9
 }
 
 public interface IControllerCommand {

@@ -66,6 +66,16 @@ internal class Controller {
         Routines[identifier].r.Start(this.Queue, loop);
     }
 
+    public void AddAction(string identifier) {
+        var action = ScriptManager.GetAction(identifier);
+        action.Enqueue(Queue);
+    }
+
+    public void CreateAndAddAction(string[] words) {
+        var action = ScriptManager.GetActionFromTemplate(words[0], words.Skip(1).ToArray());
+        action.Enqueue(Queue);
+    }
+
     public void CreateRoutine(string[] words, bool loop = false) {
         var identifier = string.Join("_", words);
         var routine = ScriptManager.GetRoutineFromTemplate(words[0], words.Skip(1).ToArray());
@@ -79,6 +89,25 @@ internal class Controller {
             r.Stop();
         };
         _sender.SendCommand(new KeybotCommand(new string[] { "KEY_RELEASE_ALL" }));
+    }
+
+    public void PauseRoutine(string identifier) {
+        if (Routines.ContainsKey(identifier))
+            Routines[identifier].r.Stop();
+    }
+
+    public void ResumeRoutine(string identifier) {
+        if (Routines.ContainsKey(identifier))
+            Routines[identifier].r.Start(this.Queue, Routines[identifier].loop);
+    }
+
+    public void EnqueueCommand(ControllerCommand cmd) {
+        if (Queue.Count > maxQueueLength) {
+            throw new InvalidOperationException("Command queue too long; please check your application and don't push too many SKIPs.");
+        }
+        else {
+            Queue.Enqueue(cmd);
+        }
     }
 
     public void Reset() {
@@ -132,6 +161,18 @@ internal class Controller {
             }
             else if (command.CommandType == ControllerCommandType.REMOVE_ROUTINE) {
                 RemoveRoutine(command.CommandStrings[0]);
+            }
+            else if (command.CommandType == ControllerCommandType.PAUSE_ROUTINE) {
+                PauseRoutine(command.CommandStrings[0]);
+            }
+            else if (command.CommandType == ControllerCommandType.RESUME_ROUTINE) {
+                ResumeRoutine(command.CommandStrings[0]);
+            }
+            else if (command.CommandType == ControllerCommandType.ADD_ACTION) {
+                AddAction(command.CommandStrings[0]);
+            }
+            else if (command.CommandType == ControllerCommandType.CREATE_ACTION) {
+                CreateAndAddAction(command.CommandStrings.ToArray());
             }
             else if (command.CommandType == ControllerCommandType.CREATE_ROUTINE) {
                 if (command.CommandStrings.Count() > 1 && command.CommandStrings[0] == "LOOP") {

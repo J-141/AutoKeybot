@@ -1,3 +1,5 @@
+## ControllerCommand
+
 ## Action
 
 should be a .action file
@@ -16,6 +18,8 @@ valid lines: (each line can be parsed to a controller command)
 	ACTION [ActionIdentifier] // ACTION can call each other
 
 Action is 1-1 mapped to a global identifier. (see Identifier)
+
+
 ## Routine
 should be a .routine file
 
@@ -23,7 +27,7 @@ valid lines: (controller command, ACTION, or WAIT)
 
 	WAIT [millisecond to wait] // different from skip, this is not blocking
 
-	ACTION [ActionIdentifier]
+	ADD_ACTION [ActionIdentifier]
 	KEY [KeyCommandType] word1, word2, .. 
 	SKIP [int(millisecond)]
 	START_ROUTINE [LOOP] [RoutineIdentifier] 
@@ -48,8 +52,8 @@ if you start_routine with some routine already running, it will be restarted.
 	CREATE_ROUTINE [TemplateIdentifier] [args] // will also be started
 
 Note: you cannot create 
-# Routine Template
-contains a set of aliases. can also accept args. should be created from a .template file.
+# Routine/action Template
+contains a set of aliases. can also accept args. should be created from a .[routine/action].template file.
 will be text-substituted and then create routine.
 	
 	ALIAS [word] [

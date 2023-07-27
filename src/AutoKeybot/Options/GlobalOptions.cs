@@ -7,7 +7,7 @@ public class GlobalOptions {
     [Option("root", Required = false, HelpText = "Set root path")]
     public string Root { get; set; } = ".";
 
-    [Option("port", Required = false, HelpText = "Set output port")]  // if configured, will use arduino.
+    [Option("port", Required = false, HelpText = "Set output port. if configured, will use arduino hardware executor.")]
     public string Port { get; set; } = "";
 
     [Option("int", Required = false, HelpText = "Set global interval")]
@@ -17,7 +17,7 @@ public class GlobalOptions {
     public int DisplayInterval { get; set; } = 200;
 
     [Option("max-queue-length", Required = false, HelpText = "Set max queue length")]
-    public int MaxQueueLength { get; set; } = 500;
+    public int MaxQueueLength { get; set; } = 1200;
 
     [Option("min=queue-length", Required = false, HelpText = "Set min queue length")]
     public int MinQueueLength { get; set; } = 50;
@@ -25,7 +25,9 @@ public class GlobalOptions {
     [Option("display-length", Required = false, HelpText = "Set max displayed queue length")]
     public int MaxDisplayQueueSize { get; set; } = 100;
 
-    // queue mode: expose the command queue, and let external program enter the controller command into the queue.
-    [Option("queue", Required = false, HelpText = "queue mode")]
+    [Option("queue", Required = false, HelpText = "Run as queue mode. In this mode the command queue is exposed, and let external program enter the controller command into the queue.")]
     public bool IsQueueMode { get; set; } = false;
+
+    [Option("minPrintTime", Required = false, HelpText = "the minimal time interval between the press and release event of the same key. applies only for software executor")]
+    public int? minPrintTime { get; set; } = null;
 }

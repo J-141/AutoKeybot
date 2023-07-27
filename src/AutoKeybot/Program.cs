@@ -28,7 +28,7 @@ internal class Program {
             sender = new ArduinoKeyExecutor(option.Port);
         }
         else {
-            sender = new KeyboardExecutor();
+            sender = new KeyboardExecutor(option.minPrintTime);
         }
         ScriptManager.Root = option.Root;
         displayManager = new DisplayManager(option);
@@ -85,10 +85,10 @@ internal class Program {
     }
 
     private static void EnterQueue(string? command) {
-        if (command == null)
+        if (string.IsNullOrEmpty(command))
             return;
         var cmd = new ControllerCommand(command.Trim());
-        controller.Queue.Enqueue(cmd);
+        controller.EnqueueCommand(cmd);
     }
 
     private static void ExecuteCommand(string? command) {

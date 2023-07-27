@@ -38,7 +38,7 @@ public class DisplayManager {
     public void Refresh() {
         Console.Clear();
         Console.WriteLine(string.Join(string.Empty, Enumerable.Repeat("-", Console.WindowWidth)));
-        var space = string.Join(string.Empty, Enumerable.Repeat(" ", (Console.WindowWidth - 10) / 2));
+        var space = string.Join(string.Empty, Enumerable.Repeat(" ", (Console.WindowWidth - 10) / 2 - 1));
         Console.WriteLine("|" + space + "AutoKeybot" + space + "|");
         Console.WriteLine(string.Join(string.Empty, Enumerable.Repeat("-", Console.WindowWidth)));
         foreach (var r in Routines.Keys) { Console.WriteLine(r); }

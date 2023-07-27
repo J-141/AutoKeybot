@@ -1,12 +1,12 @@
-﻿namespace AutoKeybot.Schedulers {
+﻿namespace AutoKeybot.Templates {
 
-    internal class RoutineTemplate {
+    internal class ActionTemplate {
         public Dictionary<string, string[]> SubRules = new Dictionary<string, string[]>();
 
-        public RoutineTemplate(string filePath) : this(File.ReadAllLines(filePath)) {
+        public ActionTemplate(string filePath) : this(File.ReadAllLines(filePath)) {
         }
 
-        public RoutineTemplate(string[] lines) {
+        public ActionTemplate(string[] lines) {
             int index = 0;
             var strArray = lines.Select(l => l.Trim()).Where(l => l.Length > 0).ToArray();
             while (index < strArray.Length) {
@@ -39,7 +39,7 @@
             index += 1;
         }
 
-        public Routine CreateRoutine(string[] words) {
+        public Core.Action CreateAction(string[] words) {
             var strs = new List<string>();
             foreach (var w in words) {
                 if (SubRules.TryGetValue(w, out var cmds)) {
@@ -49,9 +49,8 @@
                     throw new InvalidDataException($"Unknown word '{w}': no substitution rule found.");
                 }
             }
-            var routine = new Routine();
-            routine.ConstructFromLines(strs);
-            return routine;
+            var action = new Core.Action(strs);
+            return action;
         }
     }
 }
