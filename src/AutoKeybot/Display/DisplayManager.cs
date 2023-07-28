@@ -46,7 +46,7 @@ public class DisplayManager {
         Console.WriteLine(GetExecutedString());
         Console.WriteLine(string.Join(string.Empty, Enumerable.Repeat("-", Console.WindowWidth)));
         Console.WriteLine(string.Join(string.Empty, Enumerable.Repeat("-", Console.WindowWidth)));
-        var commingStr = comingQueue.GetString();
+        var commingStr = comingQueue.GetStringToDisplay();
         int i = 0;
         while (i < commingStr.Length) {
             Console.WriteLine(new string(commingStr.Skip(i).Take(Console.WindowWidth).ToArray()));

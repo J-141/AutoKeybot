@@ -3,19 +3,33 @@
 namespace AutoKeybot.Core {
 
     public class CommandQueue {
-        private readonly Queue<IControllerCommand> _queue = new Queue<IControllerCommand>();
+        private readonly LinkedList<IControllerCommand> _queue = new LinkedList<IControllerCommand>();
         private readonly object _lock = new object();
 
         public void Enqueue(IControllerCommand item) {
             lock (_lock) {
-                _queue.Enqueue(item);
+                _queue.AddLast(item);
+            }
+        }
+
+        public void Insert(IControllerCommand item) {
+            lock (_lock) {
+                _queue.AddFirst(item);
+            }
+        }
+
+        public void InsertBatch(IEnumerable<IControllerCommand> items) {
+            lock (_lock) {
+                foreach (var item in items) {
+                    _queue.AddFirst(item);
+                }
             }
         }
 
         public void EnqueueBatch(IEnumerable<IControllerCommand> items) {
             lock (_lock) {
                 foreach (var item in items) {
-                    _queue.Enqueue(item);
+                    _queue.AddLast(item);
                 }
             }
         }
@@ -23,7 +37,8 @@ namespace AutoKeybot.Core {
         public bool TryDequeue(out IControllerCommand item) {
             lock (_lock) {
                 if (_queue.Count > 0) {
-                    item = _queue.Dequeue();
+                    item = _queue.Last();
+                    _queue.RemoveLast();
                     return true;
                 }
                 else {
@@ -39,7 +54,7 @@ namespace AutoKeybot.Core {
             }
         }
 
-        public string GetString() {
+        public string GetStringToDisplay() {
             return string.Join(string.Empty, _queue.Select(x => x.CommandType == ControllerCommandType.KEY ? KeyAbbr.Abbr(x.CommandStrings[1]) : "").ToArray());
         }
 
