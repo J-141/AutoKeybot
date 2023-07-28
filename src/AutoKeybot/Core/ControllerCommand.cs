@@ -8,7 +8,7 @@ public enum ControllerCommandType {
     CREATE_ROUTINE = 5,
     PAUSE_ROUTINE = 6,
     RESUME_ROUTINE = 7,
-    ADD_ACTION = 8,
+    EXEC_ACTION = 8,
     CREATE_ACTION = 9
 }
 
@@ -26,9 +26,10 @@ internal class ControllerCommand : IControllerCommand {
     public ControllerCommandType CommandType { get; private set; }
     public string[] CommandStrings { get; private set; }
 
-    public ControllerCommand(string commandString) {
-        var words = commandString.Split();
+    public ControllerCommand(string line) : this(line.Split()) {
+    }
 
+    public ControllerCommand(string[] words) {
         if (Enum.TryParse<ControllerCommandType>(words[0], out var cmdType)) {
             if (cmdType == ControllerCommandType.KEY) {
                 CommandType = ControllerCommandType.KEY;

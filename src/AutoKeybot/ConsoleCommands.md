@@ -24,5 +24,6 @@ all the things here are case sensitive.
 
 ## queue mode [--queue]
 
-in this mode, normal commands are disabled. each line you type in the input stream would be parsed into a controllercommand and enqueue.
+in this mode, normal commands are disabled. each line you type in the input stream would be parsed into a queue command and enqueue/insert.
 Use this if you have another program take control of the commands. 
+[ENQUEUE/INSERT] [ControllerCommand]

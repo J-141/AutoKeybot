@@ -36,4 +36,8 @@ public class Action {
     public void Enqueue(CommandQueue queue) {
         queue.EnqueueBatch(Commands);
     }
+
+    public void InsertInto(CommandQueue queue) {
+        queue.InsertBatch(Commands);
+    }
 }

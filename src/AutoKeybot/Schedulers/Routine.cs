@@ -2,21 +2,6 @@
 
 namespace AutoKeybot.Schedulers;
 
-internal enum RoutineCommandType {
-    ACTION_COMMAND,
-    CONTROLLER_COMMAND,
-    WAIT_COMMAND
-}
-
-internal class RoutineCommand {
-    public RoutineCommandType Type { get; set; }
-
-    public Core.Action? RoutineAction { get; set; } = null;
-    public ControllerCommand? RoutineControllerCommand { get; set; } = null;
-
-    public int WaitTime { get; set; }
-}
-
 public class Routine {
 
     // an IRoutine is a scheduler which contains a list of Actions or ControllerCommands.

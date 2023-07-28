@@ -1,5 +1,4 @@
 ﻿using AutoKeybot;
-using AutoKeybot.Core;
 using AutoKeybot.Display;
 using AutoKeybot.KeyboardModule;
 using AutoKeybot.Options;
@@ -35,12 +34,13 @@ internal class Program {
         controller = new Controller(option, sender, displayManager);
 
         if (option.IsQueueMode) {
+            mode = Mode.Queue;
             while (true) {
                 try {
                     if (Console.KeyAvailable) {
                         // Process the input
-                        string? command = Console.ReadLine();
-                        EnterQueue(command);
+                        string? command = Console.ReadLine()?.Trim();
+                        ExecuteQueueCommand(command);
                     }
                 }
                 catch (Exception e) {
@@ -84,11 +84,11 @@ internal class Program {
         }
     }
 
-    private static void EnterQueue(string? command) {
+    private static void ExecuteQueueCommand(string? command) {
         if (string.IsNullOrEmpty(command))
             return;
-        var cmd = new ControllerCommand(command.Trim());
-        controller.EnqueueCommand(cmd);
+        var cmd = new QueueCommand(command);
+        cmd.ExecuteOn(controller);
     }
 
     private static void ExecuteCommand(string? command) {

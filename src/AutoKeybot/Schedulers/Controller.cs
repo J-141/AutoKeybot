@@ -66,14 +66,14 @@ internal class Controller {
         Routines[identifier].r.Start(this.Queue, loop);
     }
 
-    public void AddAction(string identifier) {
+    public void ExecAction(string identifier) {
         var action = ScriptManager.GetAction(identifier);
-        action.Enqueue(Queue);
+        action.InsertInto(Queue);
     }
 
-    public void CreateAndAddAction(string[] words) {
+    public void CreateAndExecAction(string[] words) {
         var action = ScriptManager.GetActionFromTemplate(words[0], words.Skip(1).ToArray());
-        action.Enqueue(Queue);
+        action.InsertInto(Queue);
     }
 
     public void CreateRoutine(string[] words, bool loop = false) {
@@ -107,6 +107,15 @@ internal class Controller {
         }
         else {
             Queue.Enqueue(cmd);
+        }
+    }
+
+    public void InsertCommand(ControllerCommand cmd) {
+        if (Queue.Count > maxQueueLength) {
+            throw new InvalidOperationException("Command queue too long; please check your application and don't push too many SKIPs.");
+        }
+        else {
+            Queue.Insert(cmd);
         }
     }
 
@@ -168,11 +177,11 @@ internal class Controller {
             else if (command.CommandType == ControllerCommandType.RESUME_ROUTINE) {
                 ResumeRoutine(command.CommandStrings[0]);
             }
-            else if (command.CommandType == ControllerCommandType.ADD_ACTION) {
-                AddAction(command.CommandStrings[0]);
+            else if (command.CommandType == ControllerCommandType.EXEC_ACTION) {
+                ExecAction(command.CommandStrings[0]);
             }
             else if (command.CommandType == ControllerCommandType.CREATE_ACTION) {
-                CreateAndAddAction(command.CommandStrings.ToArray());
+                CreateAndExecAction(command.CommandStrings.ToArray());
             }
             else if (command.CommandType == ControllerCommandType.CREATE_ROUTINE) {
                 if (command.CommandStrings.Count() > 1 && command.CommandStrings[0] == "LOOP") {
