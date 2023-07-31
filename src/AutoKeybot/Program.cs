@@ -35,6 +35,7 @@ internal class Program {
 
         if (option.IsQueueMode) {
             mode = Mode.Queue;
+            controller.Run();
             while (true) {
                 try {
                     if (Console.KeyAvailable) {
