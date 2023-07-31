@@ -126,7 +126,7 @@ internal class Controller {
             r.Reset();
         };
         Routines.Clear();
-        ScriptManager.Reset()
+        ScriptManager.Reset();
         _sender.SendCommand(new KeybotCommand(new string[] { "KEY_RELEASE_ALL" }));
     }
 
