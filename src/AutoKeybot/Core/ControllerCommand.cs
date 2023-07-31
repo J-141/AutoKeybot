@@ -9,7 +9,8 @@ public enum ControllerCommandType {
     PAUSE_ROUTINE = 6,
     RESUME_ROUTINE = 7,
     EXEC_ACTION = 8,
-    CREATE_ACTION = 9
+    CREATE_ACTION = 9,
+    RESET = 10
 }
 
 public interface IControllerCommand {

@@ -52,6 +52,13 @@ public static class ScriptManager {
         return action;
     }
 
+    public static void Reset() {
+        _routines.Clear();
+        _actions.Clear();
+        _actionTemplates.Clear();
+        _routineTemplates.Clear();
+    }
+
     public static Core.Action GetAction(string identifier) {
         if (!_actions.TryGetValue(identifier, out var action)) {
             string filePath = Path.Combine(Root, identifier.Replace(".", "/") + ".action");

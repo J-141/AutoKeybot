@@ -126,6 +126,7 @@ internal class Controller {
             r.Reset();
         };
         Routines.Clear();
+        ScriptManager.Reset()
         _sender.SendCommand(new KeybotCommand(new string[] { "KEY_RELEASE_ALL" }));
     }
 
@@ -190,6 +191,9 @@ internal class Controller {
                 else {
                     CreateAndRunRoutine(command.CommandStrings.ToArray(), false);
                 }
+            }
+            else if (command.CommandType == ControllerCommandType.RESET) {
+                Reset();
             }
         }
         if (commands.Any()) {
