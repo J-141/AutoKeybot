@@ -10,7 +10,6 @@ internal class Controller {
     private Timer _timer { get; set; }
     public int GlobalClockInterval;
     public CommandQueue Queue { get; set; } //null command means skip one clock interval
-    public int ToSkip = 0;
     private int maxQueueLength { get; set; }
     private int minQueueLength { get; set; }
 
@@ -144,22 +143,28 @@ internal class Controller {
             };
             addingNewCommands = true;
         }
-        if (ToSkip > 0) {
-            ToSkip--;
-            _displayManager.EnqueueCommand(" ");
-            return;
-        }
 
-        while (Queue.TryDequeue(out IControllerCommand command)) {
+        while (Queue.PeekLast() != null) {
+            var command = Queue.PeekLast()!;
+            if (command.CommandType == ControllerCommandType.SKIP) {
+                var new_skip = int.Parse(command.CommandStrings[0]) - GlobalClockInterval;
+                _displayManager.EnqueueCommand(" ");
+                if (new_skip > 0) {
+                    command.CommandStrings[0] = new_skip.ToString();
+                }
+                else {
+                    Queue.TryDequeue(out var _);
+                }
+                break;
+            }
+
+            Queue.TryDequeue(out command);
+
             if (command.CommandType == ControllerCommandType.KEY) {
                 var cmd = new KeybotCommand(command.CommandStrings);
                 commands.Add(cmd);
                 if (command.CommandStrings.Length > 1)
                     _displayManager.EnqueueCommand(KeyAbbr.Abbr(command.CommandStrings[1]));
-            }
-            else if (command.CommandType == ControllerCommandType.SKIP) {
-                ToSkip += int.Parse(command.CommandStrings[0]) / GlobalClockInterval;
-                break;
             }
             else if (command.CommandType == ControllerCommandType.START_ROUTINE) {
                 if (command.CommandStrings.Count() > 1 && command.CommandStrings[0] == "LOOP") {
@@ -197,7 +202,7 @@ internal class Controller {
             }
             else if (command.CommandType == ControllerCommandType.RESTART) {
                 Reset();
-                Run()
+                Run();
             }
         }
         if (commands.Any()) {
