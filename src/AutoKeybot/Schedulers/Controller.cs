@@ -195,6 +195,9 @@ internal class Controller {
             else if (command.CommandType == ControllerCommandType.RESET) {
                 Reset();
             }
+            else if (command.CommandType == ControllerCommandType.RUN) {
+                Run();
+            }
         }
         if (commands.Any()) {
             _sender.SendBatchCommand(commands);
