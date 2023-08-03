@@ -38,11 +38,9 @@ internal class Program {
             controller.Run();
             while (true) {
                 try {
-                    if (Console.KeyAvailable) {
-                        // Process the input
-                        string? command = Console.ReadLine()?.Trim();
-                        ExecuteQueueCommand(command);
-                    }
+                    // Process the input
+                    string? command = Console.ReadLine()?.Trim();
+                    ExecuteQueueCommand(command);
                 }
                 catch (Exception e) {
                     Console.Write(e.ToString());

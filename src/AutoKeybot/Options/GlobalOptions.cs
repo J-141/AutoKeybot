@@ -10,10 +10,10 @@ public class GlobalOptions {
     [Option("port", Required = false, HelpText = "Set output port. if configured, will use arduino hardware executor.")]
     public string Port { get; set; } = "";
 
-    [Option("int", Required = false, HelpText = "Set global interval")]
+    [Option("global-int", Required = false, HelpText = "Set global interval")]
     public int GlobalClockInterval { get; set; } = 50;
 
-    [Option("int", Required = false, HelpText = "Set display refresh interval")]
+    [Option("display-int", Required = false, HelpText = "Set display refresh interval")]
     public int DisplayInterval { get; set; } = 200;
 
     [Option("max-queue-length", Required = false, HelpText = "Set max queue length")]
