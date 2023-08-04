@@ -8,20 +8,20 @@ namespace AutoKeybot.Core {
 
         public void Enqueue(IControllerCommand item) {
             lock (_lock) {
-                _queue.AddFirst(item);
+                _queue.AddFirst(item.Copy());
             }
         }
 
         public void Insert(IControllerCommand item) {
             lock (_lock) {
-                _queue.AddLast(item);
+                _queue.AddLast(item.Copy());
             }
         }
 
         public void InsertBatch(IEnumerable<IControllerCommand> items) {
             lock (_lock) {
                 foreach (var item in items.Reverse()) {
-                    _queue.AddLast(item);
+                    _queue.AddLast(item.Copy());
                 }
             }
         }
@@ -29,7 +29,7 @@ namespace AutoKeybot.Core {
         public void EnqueueBatch(IEnumerable<IControllerCommand> items) {
             lock (_lock) {
                 foreach (var item in items) {
-                    _queue.AddFirst(item);
+                    _queue.AddFirst(item.Copy());
                 }
             }
         }

@@ -22,11 +22,18 @@ public interface IControllerCommand {
     public ControllerCommandType CommandType { get; }
 
     public string[] CommandStrings { get; }
+
+    public IControllerCommand Copy();
 }
 
 internal class ControllerCommand : IControllerCommand {
     public ControllerCommandType CommandType { get; private set; }
     public string[] CommandStrings { get; private set; }
+
+    public ControllerCommand(ControllerCommandType commandType, string[] commandStrings) {
+        CommandType = commandType;
+        CommandStrings = (string[])commandStrings.Clone();
+    }
 
     public ControllerCommand(string line) : this(line.Split()) {
     }
@@ -51,5 +58,9 @@ internal class ControllerCommand : IControllerCommand {
             throw new InvalidDataException("Please use ControllerCommand(IArduinoCommand cmd) to create ARDUINO_COMMAND-type ControllerCommand.");
         }
         CommandType = cmdType;
+    }
+
+    public IControllerCommand Copy() {
+        return new ControllerCommand(CommandType, CommandStrings);
     }
 }
