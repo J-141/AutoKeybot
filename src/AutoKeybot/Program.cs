@@ -87,7 +87,10 @@ internal class Program {
         if (string.IsNullOrEmpty(command))
             return;
         var cmd = new QueueCommand(command);
-        cmd.ExecuteOn(controller);
+        if (cmd.ExecuteOn(controller))
+            Console.WriteLine("1");
+        else
+            Console.WriteLine("0");
     }
 
     private static void ExecuteCommand(string? command) {

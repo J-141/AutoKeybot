@@ -3,7 +3,8 @@ using AutoKeybot.Schedulers;
 
 internal enum QueueCommandType {
     ENQUEUE,
-    INSERT
+    INSERT,
+    EXEC  // only enqueue if queue is empty. otherwise, drop.
 }
 
 internal class QueueCommand {
@@ -22,12 +23,21 @@ internal class QueueCommand {
         Command = new ControllerCommand(words.Skip(1).ToArray());
     }
 
-    public void ExecuteOn(Controller ctr) {
+    public bool ExecuteOn(Controller ctr) {
         if (Type == QueueCommandType.ENQUEUE) {
             ctr.EnqueueCommand(Command);
+            return true;
         }
-        else {
+        else if (Type == QueueCommandType.INSERT) {
             ctr.InsertCommand(Command);
+            return true;
         }
+        else if (Type == QueueCommandType.EXEC) {
+            if (ctr.Queue.Count == 0) {
+                ctr.EnqueueCommand(Command);
+                return true;
+            }
+        }
+        return false;
     }
 }
