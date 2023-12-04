@@ -13,6 +13,9 @@ public class GlobalOptions {
     [Option("global-int", Required = false, HelpText = "Set global interval")]
     public int GlobalClockInterval { get; set; } = 50;
 
+    [Option("jiggle-int-delta", Required = false, HelpText = "The delta for global interval jiggling")]
+    public int GlobalIntervalDelta { get; set; } = 10;
+
     [Option("display-int", Required = false, HelpText = "Set display refresh interval")]
     public int DisplayInterval { get; set; } = 200;
 

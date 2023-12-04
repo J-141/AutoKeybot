@@ -12,16 +12,17 @@ internal class Controller {
     public CommandQueue Queue { get; set; } //null command means skip one clock interval
     private int maxQueueLength { get; set; }
     private int minQueueLength { get; set; }
-
+    private GlobalOptions _options { get; set; }
     private IKeyboardExecutor _sender { get; set; }
     private DisplayManager _displayManager;
     private bool addingNewCommands { get; set; } = true;
     public Dictionary<string, (Routine r, bool loop)> Routines { get; set; } = new Dictionary<string, (Routine r, bool loop)>();
 
     public Controller(GlobalOptions options, IKeyboardExecutor sender, DisplayManager display) {
-        _timer = new Timer(options.GlobalClockInterval);
-        _timer.AutoReset = true;
+        _timer = new Timer(GetNextInterval());
         _timer.Elapsed += (s, o) => Execute();
+        _timer.Elapsed += (s, o) => ResetTimer();
+        _options = options;
         maxQueueLength = options.MaxQueueLength;
         minQueueLength = options.MinQueueLength;
         Queue = new CommandQueue();
@@ -29,6 +30,16 @@ internal class Controller {
         GlobalClockInterval = options.GlobalClockInterval;
         _displayManager = display;
         display.Routines = Routines;
+    }
+
+    private void ResetTimer() {
+        _timer.Interval = GetNextInterval();
+        _timer.Start();
+    }
+
+    private int GetNextInterval() {
+        Random rnd = new Random();
+        return new Random().Next(_options.GlobalClockInterval - _options.GlobalIntervalDelta, _options.GlobalClockInterval + _options.GlobalIntervalDelta);
     }
 
     public void Run() {
