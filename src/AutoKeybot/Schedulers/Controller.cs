@@ -19,9 +19,6 @@ internal class Controller {
     public Dictionary<string, (Routine r, bool loop)> Routines { get; set; } = new Dictionary<string, (Routine r, bool loop)>();
 
     public Controller(GlobalOptions options, IKeyboardExecutor sender, DisplayManager display) {
-        _timer = new Timer(GetNextInterval());
-        _timer.Elapsed += (s, o) => Execute();
-        _timer.Elapsed += (s, o) => ResetTimer();
         _options = options;
         maxQueueLength = options.MaxQueueLength;
         minQueueLength = options.MinQueueLength;
@@ -30,6 +27,9 @@ internal class Controller {
         GlobalClockInterval = options.GlobalClockInterval;
         _displayManager = display;
         display.Routines = Routines;
+        _timer = new Timer(GetNextInterval());
+        _timer.Elapsed += (s, o) => Execute();
+        _timer.Elapsed += (s, o) => ResetTimer();
     }
 
     private void ResetTimer() {
@@ -38,7 +38,6 @@ internal class Controller {
     }
 
     private int GetNextInterval() {
-        Random rnd = new Random();
         return new Random().Next(_options.GlobalClockInterval - _options.GlobalIntervalDelta, _options.GlobalClockInterval + _options.GlobalIntervalDelta);
     }
 
