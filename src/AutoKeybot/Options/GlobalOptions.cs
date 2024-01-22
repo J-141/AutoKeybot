@@ -10,11 +10,14 @@ public class GlobalOptions {
     [Option("port", Required = false, HelpText = "Set output port. if configured, will use arduino hardware executor.")]
     public string Port { get; set; } = "";
 
+    [Option("max-time", Required = false, HelpText = "Maximum time to run in mins.")]
+    public int MaxRunTimeInMins { get; set; } = 10;
+
     [Option("global-int", Required = false, HelpText = "Set global interval")]
-    public int GlobalClockInterval { get; set; } = 50;
+    public int GlobalClockInterval { get; set; } = 30;
 
     [Option("jiggle-int-delta", Required = false, HelpText = "The delta for global interval jiggling")]
-    public int GlobalIntervalDelta { get; set; } = 10;
+    public int GlobalIntervalDelta { get; set; } = 15;
 
     [Option("display-int", Required = false, HelpText = "Set display refresh interval")]
     public int DisplayInterval { get; set; } = 200;

@@ -4,18 +4,28 @@
 
 should be a .action file
 
-valid lines: (each line can be parsed to a controller command)
-	
-	// controller command
+valid lines: (controller command)
 
 	KEY [KeyCommandType] word1, word2, .. 
 	SKIP [int(millisecond)]
+
 	START_ROUTINE [LOOP] [RoutineIdentifier] 
-	STOP_ROUTINE  [RoutineIdentifier] 
 
-	// nexted action
+	PAUSE_ROUTINE  [RoutineIdentifier] 
 
-	ACTION [ActionIdentifier] // ACTION can call each other
+	REMOVE_ROUTINE [RoutineIdentifier] 
+
+    RESUME_ROUTINE [RoutineIdentifier] 
+
+	CREATE_ROUTINE [LOOP] [TemplateIdentifier] [args] // create routine from template and start
+	CREATE_ACTION [TemplateIdentifier] [args] // create action from template and execute
+
+    EXEC_ACTION [ActionIdentifier]
+
+    RESET // will stop
+    RESTART 
+
+	# // comment, would be ignored
 
 Action is 1-1 mapped to a global identifier. (see Identifier)
 
@@ -23,33 +33,31 @@ Action is 1-1 mapped to a global identifier. (see Identifier)
 ## Routine
 should be a .routine file
 
-valid lines: (controller command, ACTION, or WAIT)
+valid lines: (controller command, ACTION {}, REPEAT {}, WAIT, or RANDOM)
 
 	WAIT [millisecond to wait] // different from skip, this is not blocking
 
-	ADD_ACTION [ActionIdentifier]
-	KEY [KeyCommandType] word1, word2, .. 
-	SKIP [int(millisecond)]
-	START_ROUTINE [LOOP] [RoutineIdentifier] 
-	STOP_ROUTINE  [RoutineIdentifier]
-	
-
-Routine is 1-1 mapped to a global identifier. (see Identifier) 
-Routine is considered as singleton, you cannot run 2 instances of same routine simultaneously.
-if you start_routine with some routine already running, it will be restarted.
-
-	NEW:
 	ACTION {
 	
 	} // anonymous action. newlines around braces must be strictly same as the example.
 	// action cannot be nested!! the lines in the braces must follow all the rules for a .action file. 
-	
+
 	REPEAT [num] {
 	
 	} // repeat lines in the braces several times. newlines around braces must be strictly same as the example.
 	// this can be nested
 
-	CREATE_ROUTINE [TemplateIdentifier] [args] // will also be started
+	[Controller command] (same as # Action)
+
+	[Command 1] || [Command 2] || ... // would randomly pick one command to run. "||" is a reserved symbol. leave empty to do nothing.
+	// the routine command here must be single-line (no ACTION {} or REPEAT {})
+	
+	# // comment, would be ignored
+
+Routine is 1-1 mapped to a global identifier. (see Identifier) 
+Routine is considered as singleton, you cannot run 2 instances of same routine simultaneously.
+if you start_routine with some routine already running, it will be restarted.
+	
 
 Note: you cannot create 
 # Routine/action Template

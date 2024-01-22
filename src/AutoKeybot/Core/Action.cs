@@ -18,12 +18,7 @@ public class Action {
 
                 if (trimmed.Length > 0) {
                     var words = trimmed.Split();
-                    if (words[0] == "ACTION") {
-                        cmdList.AddRange(ScriptManager.GetAction(words[1]).Commands);
-                    }
-                    else {
-                        cmdList.Add(new ControllerCommand(trimmed));
-                    }
+                    cmdList.Add(new ControllerCommand(trimmed));
                 }
             }
             catch (Exception e) {

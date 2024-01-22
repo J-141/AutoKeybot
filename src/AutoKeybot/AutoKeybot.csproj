@@ -5,7 +5,8 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <BaseOutputPath>F:\OneDrive\Training\MyRelease\AutoKeybot</BaseOutputPath>
+    <BaseOutputPath>F:\OneDrive\Training\My.NetProjects\AutoKeybot\src\AutoKeybot\bin</BaseOutputPath>
+    <AssemblyName>ak</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,9 +16,5 @@
   <ItemGroup>
     <ProjectReference Include="..\KeyboardModule\KeyboardModule.csproj" />
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(SolutionDir)examples\*.*&quot; &quot;$(TargetDir)examples\&quot; /Y /I /R" />
-  </Target>
 
 </Project>

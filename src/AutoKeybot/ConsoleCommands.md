@@ -13,7 +13,7 @@ will stop and reset the added routine
 ## add [loop] [RoutineIdentifier] 
 
 ## create [loop] [TemplateIdentifier] [word-list] 
-crete routine from template. will also add to routine list.
+create routine from template. will also add to routine list.
 the identifier would be template name_word1_word2_...
 
 ## remove  [RoutineIdentifier]

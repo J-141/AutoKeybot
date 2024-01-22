@@ -1,4 +1,7 @@
 ﻿using AutoKeybot.Core;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace AutoKeybot.Schedulers;
 
@@ -43,11 +46,12 @@ public class Routine {
     private void ParseLine(List<RoutineCommand> outCmdList, ref int index, string[] strArray) {
         RoutineCommandType type;
         var line = strArray[index].Trim();
-        if (line.Length == 0) {
+        if (line.Length == 0 || line[0] == '#') {
             index += 1;
             return;
         }
-        var words = strArray[index].Trim().Split();
+
+        var words = line.Trim().Split();
 
         if (words[0] == "ACTION") {
             if (words[1] == "{") {
@@ -61,22 +65,37 @@ public class Routine {
         else if (words[0] == "REPEAT" && words[2] == "{") {
             ParseRepeat(outCmdList, ref index, strArray, int.Parse(words[1]));
         }
-        else if (words[0] == "WAIT") {
+        else {
             index += 1;
-            outCmdList.Add(new RoutineCommand() {
+            outCmdList.Add(GetSingleLineCommand(line));
+        }
+    }
+
+    private RoutineCommand GetSingleLineCommand(string line) {
+        if (line.Contains("||")) {
+            return GetRandomCommand(line.Split("||"));
+        }
+        var words = line.Trim().Split();
+
+        if (words[0] == "WAIT") {
+            return (new RoutineCommand() {
                 Type = RoutineCommandType.WAIT_COMMAND,
                 WaitTime = int.Parse(words[1]),
             });
         }
         else {  // controller command
-            index += 1;
-            type = RoutineCommandType.CONTROLLER_COMMAND;
-            var cmd = new ControllerCommand(line);
-            outCmdList.Add(new RoutineCommand() {
-                RoutineControllerCommand = cmd,
-                Type = type
+            return (new RoutineCommand() {
+                RoutineControllerCommand = new ControllerCommand(words),
+                Type = RoutineCommandType.CONTROLLER_COMMAND
             });
         }
+    }
+
+    private RoutineCommand GetRandomCommand(IEnumerable<string> commands) {
+        return new RoutineCommand() {
+            Type = RoutineCommandType.RANDOM_COMMAND,
+            SubCommands = commands.Select(x => GetSingleLineCommand(x)).ToList()
+        };
     }
 
     private void ParseBlock(List<RoutineCommand> outCmdList, ref int index, string[] strArray) {
@@ -111,23 +130,8 @@ public class Routine {
     private void Execute(object? x) {
         while (true) {
             var rcmd = RoutineCommands[CommandIndex];
-            if (rcmd.Type == RoutineCommandType.ACTION_COMMAND) {
-                rcmd.RoutineAction!.Enqueue(Queue);
-            }
-            else if (rcmd.Type == RoutineCommandType.CONTROLLER_COMMAND) {
-                Queue.Enqueue(rcmd.RoutineControllerCommand!);
-            }
-            else if (rcmd.Type == RoutineCommandType.WAIT_COMMAND) {
-                _timer.Change(rcmd.WaitTime, Timeout.Infinite);
-                CommandIndex = (CommandIndex + 1);
-                if (CommandIndex >= RoutineCommands.Length) {
-                    if (Loop)
-                        CommandIndex -= RoutineCommands.Length;
-                    else
-                        Stop();
-                }
+            if (!ExecCommand(rcmd))
                 break;
-            }
             CommandIndex = (CommandIndex + 1);
             if (CommandIndex >= RoutineCommands.Length) {
                 if (Loop) {
@@ -139,6 +143,34 @@ public class Routine {
                 }
             }
         }
+    }
+
+    private bool ExecCommand(RoutineCommand rcmd) {
+        if (rcmd.Type == RoutineCommandType.ACTION_COMMAND) {
+            rcmd.RoutineAction!.Enqueue(Queue);
+        }
+        else if (rcmd.Type == RoutineCommandType.CONTROLLER_COMMAND) {
+            Queue.Enqueue(rcmd.RoutineControllerCommand!);
+        }
+        else if (rcmd.Type == RoutineCommandType.WAIT_COMMAND) {
+            _timer.Change(rcmd.WaitTime, Timeout.Infinite);
+            CommandIndex = (CommandIndex + 1);
+            if (CommandIndex >= RoutineCommands.Length) {
+                if (Loop)
+                    CommandIndex -= RoutineCommands.Length;
+                else
+                    Stop();
+            }
+            return false;
+        }
+        else if (rcmd.Type == RoutineCommandType.RANDOM_COMMAND) {
+            var CommandToGo = rcmd.SubCommands!.OrderBy(x => Guid.NewGuid()).First();
+            ExecCommand(CommandToGo);
+        }
+        else if (rcmd.Type == RoutineCommandType.EMPTY_COMMAND) {
+            // do nothing
+        }
+        return true;
     }
 
     public void Stop() {
