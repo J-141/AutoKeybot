@@ -25,6 +25,8 @@ valid lines: (controller command)
     RESET // will stop
     RESTART 
 
+	[Command 1] || [Command 2] || ... // would randomly pick one command to run. "||" is a reserved symbol. leave empty to do nothing.
+
 	# // comment, would be ignored
 
 Action is 1-1 mapped to a global identifier. (see Identifier)

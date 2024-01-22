@@ -214,6 +214,11 @@ internal class Controller {
                 Reset();
                 Run();
             }
+            else if (command.CommandType == ControllerCommandType.RANDOM) {
+                var CommandToGo = command.SubCommands!.OrderBy(x => Guid.NewGuid()).First();
+                Queue.Enqueue(CommandToGo);
+                Execute();
+            }
         }
         if (commands.Any()) {
             _sender.SendBatchCommand(commands);

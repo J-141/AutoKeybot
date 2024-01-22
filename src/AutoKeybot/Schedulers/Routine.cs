@@ -75,6 +75,11 @@ public class Routine {
         if (line.Contains("||")) {
             return GetRandomCommand(line.Split("||"));
         }
+        if (string.IsNullOrWhiteSpace(line)) {
+            return (new RoutineCommand() {
+                Type = RoutineCommandType.EMPTY_COMMAND
+            });
+        }
         var words = line.Trim().Split();
 
         if (words[0] == "WAIT") {

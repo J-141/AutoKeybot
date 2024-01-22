@@ -16,9 +16,9 @@ public class Action {
             try {
                 var trimmed = line.Trim();
 
-                if (trimmed.Length > 0) {
+                if (trimmed.Length > 0 && trimmed[0] != '#') {
                     var words = trimmed.Split();
-                    cmdList.Add(new ControllerCommand(trimmed));
+                    cmdList.Add(ControllerCommandFactory.GetCommand(trimmed));
                 }
             }
             catch (Exception e) {

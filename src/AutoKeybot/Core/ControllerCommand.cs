@@ -1,4 +1,6 @@
-﻿namespace AutoKeybot.Core;
+﻿using System.Data;
+
+namespace AutoKeybot.Core;
 
 public enum ControllerCommandType {
     KEY = 1,
@@ -11,7 +13,8 @@ public enum ControllerCommandType {
     EXEC_ACTION = 8,
     CREATE_ACTION = 9,
     RESET = 10, // will stop
-    RESTART = 11
+    RESTART = 11,
+    RANDOM = 12
 }
 
 public interface IControllerCommand {
@@ -22,20 +25,50 @@ public interface IControllerCommand {
     public ControllerCommandType CommandType { get; }
 
     public string[] CommandStrings { get; }
+    public IEnumerable<IControllerCommand>? SubCommands { get; set; }
 
     public IControllerCommand Copy();
+}
+
+internal static class ControllerCommandFactory {
+
+    public static IControllerCommand GetCommand(string line) {
+        if (line.Contains("||")) {
+            return new RandomControllerCommand(line.Split("||"));
+        }
+        else {
+            return new ControllerCommand(line);
+        }
+    }
+}
+
+internal class RandomControllerCommand : IControllerCommand {
+    public ControllerCommandType CommandType { get; private set; }
+    public string[] CommandStrings { get; private set; }
+    public IEnumerable<IControllerCommand>? SubCommands { get; set; }
+
+    public RandomControllerCommand(string[] commandStrings) {
+        CommandType = ControllerCommandType.RANDOM;
+        CommandStrings = commandStrings;
+        SubCommands = commandStrings.Select(x => new ControllerCommand(x)).ToList();
+    }
+
+    public IControllerCommand Copy() {
+        return new RandomControllerCommand(CommandStrings);
+    }
 }
 
 internal class ControllerCommand : IControllerCommand {
     public ControllerCommandType CommandType { get; private set; }
     public string[] CommandStrings { get; private set; }
+    public IEnumerable<IControllerCommand>? SubCommands { get; set; } = null;
 
     public ControllerCommand(ControllerCommandType commandType, string[] commandStrings) {
         CommandType = commandType;
         CommandStrings = (string[])commandStrings.Clone();
     }
 
-    public ControllerCommand(string line) : this(line.Split()) {
+    public ControllerCommand(string line) : this(line.Trim().Split()) {
     }
 
     public ControllerCommand(string[] words) {

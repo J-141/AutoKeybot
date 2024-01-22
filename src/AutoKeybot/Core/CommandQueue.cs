@@ -1,4 +1,5 @@
 ﻿using AutoKeybot.Display;
+using System.Windows.Input;
 
 namespace AutoKeybot.Core {
 
@@ -62,7 +63,17 @@ namespace AutoKeybot.Core {
         }
 
         public string GetStringToDisplay() {
-            return string.Join(string.Empty, _queue.Select(x => x.CommandType == ControllerCommandType.KEY ? KeyAbbr.Abbr(x.CommandStrings[1]) : "").ToArray());
+            return string.Join(string.Empty, _queue.Select(x => GetCommandDisplay(x)).ToArray());
+        }
+
+        private string GetCommandDisplay(IControllerCommand cmd) {
+            if (cmd.CommandType == ControllerCommandType.KEY) {
+                return $" {KeyAbbr.Abbr(cmd.CommandStrings[1])} ";
+            }
+            if (cmd.CommandType == ControllerCommandType.EXEC_ACTION) {
+                return $"[{KeyAbbr.Abbr(cmd.CommandStrings[1])}]";
+            };
+            return string.Empty;
         }
 
         public int Count {
