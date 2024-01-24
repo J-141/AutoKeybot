@@ -4,7 +4,7 @@ using System.Windows.Input;
 namespace AutoKeybot.Core {
 
     public class CommandQueue {
-        private readonly LinkedList<IControllerCommand> _queue = new LinkedList<IControllerCommand>();
+        public readonly LinkedList<IControllerCommand> _queue = new LinkedList<IControllerCommand>();
         private readonly object _lock = new object();
 
         public void Enqueue(IControllerCommand item) {
@@ -60,20 +60,6 @@ namespace AutoKeybot.Core {
             lock (_lock) {
                 _queue.Clear();
             }
-        }
-
-        public string GetStringToDisplay() {
-            return string.Join(string.Empty, _queue.Select(x => GetCommandDisplay(x)).ToArray());
-        }
-
-        private string GetCommandDisplay(IControllerCommand cmd) {
-            if (cmd.CommandType == ControllerCommandType.KEY) {
-                return $" {KeyAbbr.Abbr(cmd.CommandStrings[1])} ";
-            }
-            if (cmd.CommandType == ControllerCommandType.EXEC_ACTION) {
-                return $"[{KeyAbbr.Abbr(cmd.CommandStrings[1])}]";
-            };
-            return string.Empty;
         }
 
         public int Count {

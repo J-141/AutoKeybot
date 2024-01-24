@@ -195,6 +195,7 @@ internal class Controller {
             }
             else if (command.CommandType == ControllerCommandType.EXEC_ACTION) {
                 ExecAction(command.CommandStrings[0]);
+                Execute();
             }
             else if (command.CommandType == ControllerCommandType.CREATE_ACTION) {
                 CreateAndExecAction(command.CommandStrings.ToArray());
@@ -216,7 +217,7 @@ internal class Controller {
             }
             else if (command.CommandType == ControllerCommandType.RANDOM) {
                 var CommandToGo = command.SubCommands!.OrderBy(x => Guid.NewGuid()).First();
-                Queue.Enqueue(CommandToGo);
+                Queue.Insert(CommandToGo);
                 Execute();
             }
         }

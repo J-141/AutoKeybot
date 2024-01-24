@@ -35,6 +35,20 @@ public class DisplayManager {
         }
     }
 
+    public string GetComingQueueDisplay() {
+        return string.Join(string.Empty, comingQueue._queue.Select(x => GetCommandDisplay(x)).Reverse().ToArray());
+    }
+
+    private string GetCommandDisplay(IControllerCommand cmd) {
+        if (cmd.CommandType == ControllerCommandType.KEY) {
+            return $" {KeyAbbr.Abbr(cmd.CommandStrings[1])} ";
+        }
+        if (cmd.CommandType == ControllerCommandType.EXEC_ACTION) {
+            return $"[{cmd.CommandStrings[0]}]";
+        };
+        return string.Empty;
+    }
+
     public void Refresh() {
         Console.Clear();
         Console.WriteLine(string.Join(string.Empty, Enumerable.Repeat("-", Console.WindowWidth)));
@@ -46,7 +60,7 @@ public class DisplayManager {
         Console.WriteLine(GetExecutedString());
         Console.WriteLine(string.Join(string.Empty, Enumerable.Repeat("-", Console.WindowWidth)));
         Console.WriteLine(string.Join(string.Empty, Enumerable.Repeat("-", Console.WindowWidth)));
-        var commingStr = comingQueue.GetStringToDisplay();
+        var commingStr = GetComingQueueDisplay();
         int i = 0;
         while (i < commingStr.Length) {
             Console.WriteLine(new string(commingStr.Skip(i).Take(Console.WindowWidth).ToArray()));

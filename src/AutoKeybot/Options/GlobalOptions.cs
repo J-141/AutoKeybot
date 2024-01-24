@@ -23,7 +23,7 @@ public class GlobalOptions {
     public int DisplayInterval { get; set; } = 200;
 
     [Option("max-queue-length", Required = false, HelpText = "Set max queue length")]
-    public int MaxQueueLength { get; set; } = 1200;
+    public int MaxQueueLength { get; set; } = 150;
 
     [Option("min=queue-length", Required = false, HelpText = "Set min queue length")]
     public int MinQueueLength { get; set; } = 50;
