@@ -75,6 +75,9 @@ public class Routine {
         if (line.Contains("||")) {
             return GetRandomCommand(line.Split("||"));
         }
+        if (line.Contains(">>")) {
+            return GetSequentialCommand(line.Split("||"));
+        }
         if (string.IsNullOrWhiteSpace(line)) {
             return (new RoutineCommand() {
                 Type = RoutineCommandType.EMPTY_COMMAND
@@ -85,7 +88,7 @@ public class Routine {
         if (words[0] == "WAIT") {
             return (new RoutineCommand() {
                 Type = RoutineCommandType.WAIT_COMMAND,
-                WaitTime = int.Parse(words[1]),
+                WaitTimeOrOrderIndex = int.Parse(words[1]),
             });
         }
         else {  // controller command
@@ -100,6 +103,14 @@ public class Routine {
         return new RoutineCommand() {
             Type = RoutineCommandType.RANDOM_COMMAND,
             SubCommands = commands.Select(x => GetSingleLineCommand(x)).ToList()
+        };
+    }
+
+    private RoutineCommand GetSequentialCommand(IEnumerable<string> commands) {
+        return new RoutineCommand() {
+            Type = RoutineCommandType.SEQUENTIAL_COMMAND,
+            SubCommands = commands.Select(x => GetSingleLineCommand(x)).ToList(),
+            WaitTimeOrOrderIndex = 0
         };
     }
 
@@ -158,7 +169,7 @@ public class Routine {
             Queue.Enqueue(rcmd.RoutineControllerCommand!);
         }
         else if (rcmd.Type == RoutineCommandType.WAIT_COMMAND) {
-            _timer.Change(rcmd.WaitTime, Timeout.Infinite);
+            _timer.Change(rcmd.WaitTimeOrOrderIndex, Timeout.Infinite);
             CommandIndex = (CommandIndex + 1);
             if (CommandIndex >= RoutineCommands.Length) {
                 if (Loop)
@@ -170,6 +181,11 @@ public class Routine {
         }
         else if (rcmd.Type == RoutineCommandType.RANDOM_COMMAND) {
             var CommandToGo = rcmd.SubCommands!.OrderBy(x => Guid.NewGuid()).First();
+            ExecCommand(CommandToGo);
+        }
+        else if (rcmd.Type == RoutineCommandType.SEQUENTIAL_COMMAND) {
+            var CommandToGo = rcmd.SubCommands.ElementAt(rcmd.WaitTimeOrOrderIndex);
+            rcmd.WaitTimeOrOrderIndex = (1 + rcmd.WaitTimeOrOrderIndex) % rcmd.SubCommands.Count();
             ExecCommand(CommandToGo);
         }
         else if (rcmd.Type == RoutineCommandType.EMPTY_COMMAND) {

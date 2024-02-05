@@ -6,6 +6,7 @@ internal enum RoutineCommandType {
     CONTROLLER_COMMAND,
     WAIT_COMMAND,
     RANDOM_COMMAND,
+    SEQUENTIAL_COMMAND,
     EMPTY_COMMAND
 }
 
@@ -14,5 +15,5 @@ internal class RoutineCommand {
     public Action? RoutineAction { get; set; } = null;
     public ControllerCommand? RoutineControllerCommand { get; set; } = null;
     public IEnumerable<RoutineCommand>? SubCommands { get; set; } = null;
-    public int WaitTime { get; set; }
+    public int WaitTimeOrOrderIndex { get; set; }
 }

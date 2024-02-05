@@ -220,6 +220,12 @@ internal class Controller {
                 Queue.Insert(CommandToGo);
                 Execute();
             }
+            else if (command.CommandType == ControllerCommandType.SEQUENTIAL) {
+                var CommandToGo = command.SubCommands!.ElementAt(((SequentialControllerCommand)command).Index);
+                ((SequentialControllerCommand)command).Index += 1;
+                Queue.Insert(CommandToGo);
+                Execute();
+            }
         }
         if (commands.Any()) {
             _sender.SendBatchCommand(commands);

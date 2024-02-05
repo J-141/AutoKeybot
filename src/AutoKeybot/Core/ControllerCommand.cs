@@ -14,7 +14,8 @@ public enum ControllerCommandType {
     CREATE_ACTION = 9,
     RESET = 10, // will stop
     RESTART = 11,
-    RANDOM = 12
+    RANDOM = 12,
+    SEQUENTIAL = 13
 }
 
 public interface IControllerCommand {
@@ -49,6 +50,23 @@ internal class RandomControllerCommand : IControllerCommand {
 
     public RandomControllerCommand(string[] commandStrings) {
         CommandType = ControllerCommandType.RANDOM;
+        CommandStrings = commandStrings;
+        SubCommands = commandStrings.Select(x => new ControllerCommand(x)).ToList();
+    }
+
+    public IControllerCommand Copy() {
+        return new RandomControllerCommand(CommandStrings);
+    }
+}
+
+internal class SequentialControllerCommand : IControllerCommand {
+    public ControllerCommandType CommandType { get; private set; }
+    public string[] CommandStrings { get; private set; }
+    public int Index { get; set; } = 0;
+    public IEnumerable<IControllerCommand>? SubCommands { get; set; }
+
+    public SequentialControllerCommand(string[] commandStrings) {
+        CommandType = ControllerCommandType.SEQUENTIAL;
         CommandStrings = commandStrings;
         SubCommands = commandStrings.Select(x => new ControllerCommand(x)).ToList();
     }

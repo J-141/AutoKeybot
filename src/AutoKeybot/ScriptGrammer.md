@@ -26,6 +26,7 @@ valid lines: (controller command)
     RESTART 
 
 	[Command 1] || [Command 2] || ... // would randomly pick one command to run. "||" is a reserved symbol. leave empty to do nothing.
+	[Command 1] >> [Command 2] >> ... // similar to || but would execute the subcommand round-robin instead of randomly.
 
 	# // comment, would be ignored
 
