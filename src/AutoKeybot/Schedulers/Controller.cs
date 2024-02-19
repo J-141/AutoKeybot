@@ -10,6 +10,7 @@ internal class Controller {
     private Timer _timer { get; set; }
     private Timer _beeper { get; set; }
     private Timer _stopTimer { get; set; }
+    private bool _running { get; set; } = false;
     private DateTime _startTime { get; set; }
     public int GlobalClockInterval;
     public CommandQueue Queue { get; set; } //null command means skip one clock interval
@@ -48,8 +49,10 @@ internal class Controller {
     }
 
     private void ResetTimer() {
-        _timer.Interval = GetNextInterval();
-        _timer.Start();
+        if (_running) {
+            _timer.Interval = GetNextInterval();
+            _timer.Start();
+        }
     }
 
     public void SetStopCountdown() {
@@ -64,6 +67,7 @@ internal class Controller {
 
     public void Run() {
         _timer.Start();
+        _running = true;
         _startTime = DateTime.Now;
         StopBeep();
         foreach (var (r, l) in Routines.Values) {
@@ -120,6 +124,7 @@ internal class Controller {
     }
 
     public void Stop() {
+        _running = false;
         _timer.Stop();
         foreach (var (r, l) in Routines.Values) {
             r.Stop();
@@ -157,6 +162,7 @@ internal class Controller {
 
     public void Reset() {
         _timer.Stop();
+        _running = false;
         Queue.Reset();
         foreach (var (r, l) in Routines.Values) {
             r.Reset();
