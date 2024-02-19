@@ -27,6 +27,7 @@ valid lines: (controller command)
 
 	[Command 1] || [Command 2] || ... // would randomly pick one command to run. "||" is a reserved symbol. leave empty to do nothing.
 	[Command 1] >> [Command 2] >> ... // similar to || but would execute the subcommand round-robin instead of randomly.
+	every sequential controller command is like a singleton, because it need to hold state.
 
 	# // comment, would be ignored
 

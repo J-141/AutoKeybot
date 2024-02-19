@@ -76,7 +76,7 @@ public class Routine {
             return GetRandomCommand(line.Split("||"));
         }
         if (line.Contains(">>")) {
-            return GetSequentialCommand(line.Split("||"));
+            return GetSequentialCommand(line.Split(">>"));
         }
         if (string.IsNullOrWhiteSpace(line)) {
             return (new RoutineCommand() {

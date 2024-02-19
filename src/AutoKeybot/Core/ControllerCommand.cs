@@ -37,6 +37,9 @@ internal static class ControllerCommandFactory {
         if (line.Contains("||")) {
             return new RandomControllerCommand(line.Split("||"));
         }
+        else if (line.Contains(">>")) {
+            return new SequentialControllerCommand(line.Split(">>"));
+        }
         else {
             return new ControllerCommand(line);
         }
@@ -72,7 +75,11 @@ internal class SequentialControllerCommand : IControllerCommand {
     }
 
     public IControllerCommand Copy() {
-        return new RandomControllerCommand(CommandStrings);
+        return this;
+    }
+
+    public void Increment() {
+        Index = (Index + 1) % CommandStrings.Length;
     }
 }
 

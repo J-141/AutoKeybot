@@ -10,8 +10,8 @@ public class GlobalOptions {
     [Option("port", Required = false, HelpText = "Set output port. if configured, will use arduino hardware executor.")]
     public string Port { get; set; } = "";
 
-    [Option("max-time", Required = false, HelpText = "Maximum time to run in mins.")]
-    public int MaxRunTimeInMins { get; set; } = 10;
+    [Option("max-time", Required = false, HelpText = "Maximum time to run in mins. 0 => run forever")]
+    public int MaxRunTimeInMins { get; set; } = 17;
 
     [Option("global-int", Required = false, HelpText = "Set global interval")]
     public int GlobalClockInterval { get; set; } = 30;
@@ -25,7 +25,7 @@ public class GlobalOptions {
     [Option("max-queue-length", Required = false, HelpText = "Set max queue length")]
     public int MaxQueueLength { get; set; } = 150;
 
-    [Option("min=queue-length", Required = false, HelpText = "Set min queue length")]
+    [Option("min-queue-length", Required = false, HelpText = "Set min queue length")]
     public int MinQueueLength { get; set; } = 50;
 
     [Option("display-length", Required = false, HelpText = "Set max displayed queue length")]

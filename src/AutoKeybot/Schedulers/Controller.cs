@@ -8,6 +8,9 @@ namespace AutoKeybot.Schedulers;
 
 internal class Controller {
     private Timer _timer { get; set; }
+    private Timer _beeper { get; set; }
+    private Timer _stopTimer { get; set; }
+    private DateTime _startTime { get; set; }
     public int GlobalClockInterval;
     public CommandQueue Queue { get; set; } //null command means skip one clock interval
     private int maxQueueLength { get; set; }
@@ -30,11 +33,29 @@ internal class Controller {
         _timer = new Timer(GetNextInterval());
         _timer.Elapsed += (s, o) => Execute();
         _timer.Elapsed += (s, o) => ResetTimer();
+        _beeper = new Timer(500);
+        _beeper.Elapsed += (s, o) => { Console.Beep(); };
+        _stopTimer = new Timer();
+        _stopTimer.Elapsed += (s, o) => { Stop(); StartBeep(); };
+    }
+
+    private void StartBeep() {
+        _beeper.Start();
+    }
+
+    private void StopBeep() {
+        _beeper.Stop();
     }
 
     private void ResetTimer() {
         _timer.Interval = GetNextInterval();
         _timer.Start();
+    }
+
+    public void SetStopCountdown() {
+        if (_options.MaxRunTimeInMins != 0) {
+            _displayManager.SetCountdown(TimeSpan.FromMilliseconds(_stopTimer.Interval - (DateTime.Now - _startTime).TotalMilliseconds));
+        }
     }
 
     private int GetNextInterval() {
@@ -43,9 +64,15 @@ internal class Controller {
 
     public void Run() {
         _timer.Start();
+        _startTime = DateTime.Now;
+        StopBeep();
         foreach (var (r, l) in Routines.Values) {
             r.Start(Queue, l);
         };
+        if (_options.MaxRunTimeInMins != 0) {
+            _stopTimer.Interval = TimeSpan.FromMinutes(_options.MaxRunTimeInMins).TotalMilliseconds;
+            _stopTimer.Start();
+        }
     }
 
     public void AddRoutine(string identifier, bool loop = false) {
@@ -140,6 +167,7 @@ internal class Controller {
     }
 
     private void Execute() {
+        SetStopCountdown();
         var commands = new List<IKeybotCommand>();
         if (Queue.Count > maxQueueLength) {
             foreach (var (r, l) in Routines.Values) {
@@ -222,7 +250,7 @@ internal class Controller {
             }
             else if (command.CommandType == ControllerCommandType.SEQUENTIAL) {
                 var CommandToGo = command.SubCommands!.ElementAt(((SequentialControllerCommand)command).Index);
-                ((SequentialControllerCommand)command).Index += 1;
+                ((SequentialControllerCommand)command).Increment();
                 Queue.Insert(CommandToGo);
                 Execute();
             }

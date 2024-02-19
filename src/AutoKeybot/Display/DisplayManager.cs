@@ -8,6 +8,7 @@ public class DisplayManager {
     private readonly Queue<string> executedQueue;
     private readonly int _maxSize;
     private CommandQueue comingQueue;
+    private string CountDown = "N/A";
     public Dictionary<string, (Routine r, bool loop)> Routines { get; set; } = null;
 
     public DisplayManager(GlobalOptions option) {
@@ -25,6 +26,10 @@ public class DisplayManager {
 
     public void SetComingQueue(CommandQueue q) {
         comingQueue = q;
+    }
+
+    public void SetCountdown(TimeSpan time) {
+        CountDown = time.ToString();
     }
 
     public void EnqueueCommand(string key) {
@@ -53,7 +58,7 @@ public class DisplayManager {
         Console.Clear();
         Console.WriteLine(string.Join(string.Empty, Enumerable.Repeat("-", Console.WindowWidth)));
         var space = string.Join(string.Empty, Enumerable.Repeat(" ", (Console.WindowWidth - 10) / 2 - 1));
-        Console.WriteLine("|" + space + "AutoKeybot" + space + "|");
+        Console.WriteLine("|" + "AutoKeybot  Stop in: " + CountDown + "|");
         Console.WriteLine(string.Join(string.Empty, Enumerable.Repeat("-", Console.WindowWidth)));
         foreach (var r in Routines.Keys) { Console.WriteLine(r); }
         Console.WriteLine(string.Join(string.Empty, Enumerable.Repeat("-", Console.WindowWidth)));
